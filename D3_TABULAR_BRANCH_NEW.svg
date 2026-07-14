@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1480 600">
+  <!-- Generator: Adobe Illustrator 30.6.0, SVG Export Plug-In . SVG Version: 2.1.4 Build 109)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #ede9fe;
+      }
+
+      .st0, .st1, .st2, .st3 {
+        stroke: #7c3aed;
+      }
+
+      .st0, .st4 {
+        stroke-width: 2.4px;
+      }
+
+      .st5 {
+        font-size: 14px;
+      }
+
+      .st5, .st6, .st7, .st8, .st9, .st10, .st11 {
+        isolation: isolate;
+      }
+
+      .st5, .st6, .st11 {
+        font-family: ArialMT, Arial;
+      }
+
+      .st5, .st12 {
+        fill: #7c3aed;
+      }
+
+      .st13, .st1, .st2, .st14, .st15 {
+        fill: none;
+      }
+
+      .st13, .st16, .st14 {
+        stroke: #64748b;
+      }
+
+      .st13, .st2, .st15 {
+        stroke-width: 2px;
+      }
+
+      .st1, .st16, .st17, .st3, .st14 {
+        stroke-width: 1.6px;
+      }
+
+      .st1, .st14 {
+        stroke-dasharray: 5 4;
+      }
+
+      .st18, .st19 {
+        font-family: HelveticaNeue-Bold, 'Helvetica Neue';
+      }
+
+      .st18, .st19, .st7, .st8, .st9, .st10 {
+        font-weight: 700;
+      }
+
+      .st18, .st7 {
+        font-size: 24px;
+      }
+
+      .st6 {
+        fill: #d6443f;
+        font-size: 12.5px;
+      }
+
+      .st19 {
+        fill: #6bccf4;
+        font-size: 39.33px;
+      }
+
+      .st4 {
+        fill: #cffafe;
+      }
+
+      .st4, .st17, .st15 {
+        stroke: #0e7490;
+      }
+
+      .st20 {
+        fill: #0e7490;
+      }
+
+      .st7, .st8, .st9, .st10 {
+        fill: #0f172a;
+        font-family: Arial-BoldMT, Arial;
+      }
+
+      .st21 {
+        fill: #fff;
+      }
+
+      .st8 {
+        font-size: 22.46px;
+      }
+
+      .st16 {
+        fill: #f8fafc;
+      }
+
+      .st9 {
+        font-size: 26.14px;
+      }
+
+      .st10 {
+        font-size: 28.54px;
+      }
+
+      .st17 {
+        fill: #ecfeff;
+      }
+
+      .st11 {
+        font-size: 12px;
+      }
+
+      .st11, .st22 {
+        fill: #64748b;
+      }
+
+      .st3 {
+        fill: #f5f3ff;
+      }
+    </style>
+  </defs>
+  <rect class="st21" width="1480" height="600"/>
+  <g>
+    <rect class="st16" x="24" y="150" width="248" height="212" rx="8" ry="8"/>
+    <text class="st7" transform="translate(54.89 218.62)"><tspan x="0" y="0">UCI Dermatology</tspan></text>
+    <text class="st6" transform="translate(48 277.21)"><tspan x="0" y="0">366 patients, 34 questions</tspan></text>
+    <text class="st6" transform="translate(48 300)"><tspan x="0" y="0">6 skin diseases</tspan></text>
+    <line class="st13" x1="272" y1="256" x2="300" y2="256"/>
+    <circle class="st22" cx="304" cy="256" r="5"/>
+    <polyline class="st15" points="304 256 304 176 342 176"/>
+    <polygon class="st20" points="350 176 341 171.5 341 180.5 350 176"/>
+    <polyline class="st2" points="304 256 304 454.9 342 454.9"/>
+    <polygon class="st12" points="350 454.5 341 450 341 459 350 454.5"/>
+    <rect class="st17" x="352" y="102" width="302" height="148" rx="8" ry="8"/>
+    <text class="st10" transform="translate(385 183.51) scale(.98 1)"><tspan x="0" y="0">SVM – DECISION</tspan></text>
+    <line class="st15" x1="654" y1="176" x2="698" y2="176"/>
+    <polygon class="st20" points="706 176 697 171.5 697 180.5 706 176"/>
+    <rect class="st17" x="708" y="102" width="302" height="148" rx="8" ry="8"/>
+    <text class="st8" transform="translate(732 141.54) scale(.94 1)"><tspan x="0" y="0">Conformal calibration</tspan></text>
+    <text class="st6" transform="translate(732 162)"><tspan x="0" y="0">(Turns the six</tspan></text>
+    <text class="st6" transform="translate(732 180)"><tspan x="0" y="0">scores into a shortlist that is</tspan></text>
+    <text class="st6" transform="translate(732 198)"><tspan x="0" y="0">guaranteed to contain the true</tspan></text>
+    <text class="st6" transform="translate(732 216)"><tspan x="0" y="0">disease a set share of the time.)</tspan></text>
+    <line class="st15" x1="1010" y1="176" x2="1054" y2="176"/>
+    <polygon class="st20" points="1062 176 1053 171.5 1053 180.5 1062 176"/>
+    <rect class="st4" x="1064" y="102" width="302" height="148" rx="8" ry="8"/>
+    <text class="st7" transform="translate(1103.0613 176)"><tspan x="0" y="0">Answer Shortlisting</tspan><tspan x="0" y="28.8" xml:space="preserve">         (Output)</tspan></text>
+    <line class="st14" x1="503" y1="372" x2="503" y2="262"/>
+    <polygon class="st22" points="503 254 498.5 263 507.5 263 503 254"/>
+    <text class="st11" transform="translate(519 300)"><tspan x="0" y="0">the answers</tspan></text>
+    <text class="st11" transform="translate(519 317)"><tspan x="0" y="0">collected so far</tspan></text>
+    <rect class="st3" x="352" y="374" width="302" height="152" rx="8" ry="8"/>
+    <text class="st9" transform="translate(376.12 461.05) scale(.79 1)"><tspan x="0" y="0">Naive Bayes – QUESTION</tspan></text>
+    <line class="st2" x1="654" y1="450" x2="698" y2="450"/>
+    <polygon class="st12" points="706 450 697 445.5 697 454.5 706 450"/>
+    <rect class="st3" x="708" y="374" width="302" height="152" rx="8" ry="8"/>
+    <text class="st7" transform="translate(732.76 450)"><tspan x="0" y="0">Which question next?</tspan></text>
+    <line class="st2" x1="1010" y1="450" x2="1054" y2="450"/>
+    <polygon class="st12" points="1062 450 1053 445.5 1053 454.5 1062 450"/>
+    <rect class="st0" x="1064" y="404" width="302" height="92" rx="8" ry="8"/>
+    <text class="st7" transform="translate(1082.9894 454.7275)"><tspan x="0" y="0">Patient answers</tspan></text>
+    <polyline class="st1" points="1215 496 1215 546 503 546 503 534"/>
+    <polygon class="st12" points="503 526 498.5 535 507.5 535 503 526"/>
+    <rect class="st21" x="788" y="535" width="146" height="22"/>
+    <text class="st5" transform="translate(796.01 549.73)"><tspan x="0" y="0">repeat until confident</tspan></text>
+    <text class="st18" transform="translate(94.87 244.23)"><tspan x="0" y="0">Dataset</tspan></text>
+    <text class="st19" transform="translate(519.48 45.11)"><tspan x="0" y="0">THE TABULAR BRANCH</tspan></text>
+  </g>
+</svg>
