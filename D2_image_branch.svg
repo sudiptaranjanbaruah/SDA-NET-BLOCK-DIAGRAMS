@@ -1,0 +1,218 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1360" viewBox="0 0 1800 1360" xml:space="preserve" font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif">
+
+<defs>
+  <style>
+    text { white-space: pre; }
+    .t   { font-size: 17px; font-weight: 700; fill: #0F172A; }
+    .t2  { font-size: 15px; font-weight: 700; fill: #0F172A; }
+    .b   { font-size: 12.5px; fill: #1E293B; }
+    .m   { font-size: 12px; font-family: 'JetBrains Mono','SF Mono',Menlo,Consolas,monospace; fill: #334155; }
+    .ms  { font-size: 11px; font-family: 'JetBrains Mono','SF Mono',Menlo,Consolas,monospace; fill: #475569; }
+    .mb  { font-size: 13px; font-family: 'JetBrains Mono','SF Mono',Menlo,Consolas,monospace; font-weight: 700; fill: #0F172A; }
+    .el  { font-size: 12px; font-family: 'JetBrains Mono','SF Mono',Menlo,Consolas,monospace; font-weight: 500; }
+    .co  { font-size: 11.5px; fill: #1E293B; }
+    .cot { font-size: 12px; font-weight: 700; }
+    .grp { font-size: 11px; font-weight: 700; fill: #64748B; letter-spacing: 1px; }
+    .badge { font-size: 11.5px; font-family: 'JetBrains Mono','SF Mono',Menlo,Consolas,monospace; font-weight: 700; }
+  </style>
+  <marker id="a-amber"  markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#F59E0B"/></marker>
+  <marker id="a-slate"  markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#64748B"/></marker>
+  <marker id="a-red"    markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#EF4444"/></marker>
+</defs>
+
+<rect width="1800" height="1360" fill="#FFFFFF"/>
+
+<text x="40" y="46" font-size="23" font-weight="700" fill="#0F172A">D2 · The Image Branch — what happens when a photo is uploaded</text>
+<text x="40" y="70" font-size="13.5" fill="#64748B">Raw bytes → deterministic eval transform → MobileNetV3 (surgically modified) → softmax → reindexed to canonical order. Tensor shapes shown at every hop.</text>
+
+<!-- ══════════ ROW A: MAIN PIPELINE ══════════ -->
+
+<!-- upload -->
+<rect x="40" y="170" width="210" height="110" rx="5" fill="#64748B" fill-opacity="0.12" stroke="#64748B" stroke-width="1.5"/>
+<text x="145" y="205" class="t2" text-anchor="middle">Upload</text>
+<text x="145" y="230" class="ms" text-anchor="middle">st.file_uploader</text>
+<text x="145" y="252" class="ms" text-anchor="middle">JPEG · PNG</text>
+<text x="145" y="272" class="ms" text-anchor="middle" fill="#94A3B8">(or a demo image)</text>
+
+<line x1="250" y1="225" x2="292" y2="225" stroke="#64748B" stroke-width="1.8" marker-end="url(#a-slate)"/>
+<text x="271" y="215" class="el" fill="#475569" text-anchor="middle">bytes</text>
+
+<!-- eval transform -->
+<rect x="300" y="110" width="470" height="280" rx="6" fill="#64748B" fill-opacity="0.12" stroke="#64748B" stroke-width="1.5"/>
+<text x="320" y="140" class="t">EVAL TRANSFORM</text>
+<text x="320" y="161" class="ms">timm defaults · deterministic · no augmentation</text>
+<text x="320" y="192" class="m">1 · convert("RGB")        strip alpha / EXIF</text>
+<text x="320" y="216" class="m">2 · Resize(256)           crop_pct 0.875</text>
+<text x="320" y="240" class="m">3 · CenterCrop(224)</text>
+<text x="320" y="264" class="m">4 · ToTensor()            [3,224,224] ∈ [0,1]</text>
+<text x="320" y="288" class="m">5 · Normalize(</text>
+<text x="320" y="308" class="m">      mean=(0.485, 0.456, 0.406),</text>
+<text x="320" y="328" class="m">      std =(0.229, 0.224, 0.225))   ImageNet</text>
+<text x="320" y="356" class="m">6 · unsqueeze(0)</text>
+<text x="320" y="378" class="mb" fill="#B45309">   → [1, 3, 224, 224]</text>
+
+<line x1="770" y1="250" x2="842" y2="250" stroke="#F59E0B" stroke-width="1.8" marker-end="url(#a-amber)"/>
+<text x="806" y="240" class="el" fill="#B45309" text-anchor="middle">tensor</text>
+
+<!-- forward pass -->
+<rect x="850" y="170" width="330" height="160" rx="6" fill="#F59E0B" fill-opacity="0.12" stroke="#F59E0B" stroke-width="1.8"/>
+<text x="870" y="200" class="t">FORWARD PASS</text>
+<text x="870" y="224" class="m">_MobileNetV3Fusion(cfg)</text>
+<text x="870" y="246" class="m">.eval() · CPU · torch.no_grad()</text>
+<text x="870" y="276" class="badge" fill="#B45309">acc 0.733 · macro-F1 0.716</text>
+<text x="870" y="296" class="badge" fill="#B45309">AUC 0.920 · 360 test images</text>
+<text x="870" y="318" class="ms" fill="#B45309">▼ internals expanded below</text>
+
+<!-- forward -> logits (step arrow) -->
+<path d="M1180,250 L1215,250 L1215,142 L1242,142" fill="none" stroke="#F59E0B" stroke-width="1.8" marker-end="url(#a-amber)"/>
+
+<!-- ══════════ RIGHT COLUMN: POST-PROCESSING ══════════ -->
+<rect x="1250" y="110" width="520" height="65" rx="5" fill="#F59E0B" fill-opacity="0.10" stroke="#F59E0B" stroke-width="1.4"/>
+<text x="1270" y="137" class="mb">logits ∈ ℝ⁶      [1, 6]</text>
+<text x="1270" y="160" class="ms">raw scores, alphabetical class order</text>
+
+<line x1="1510" y1="175" x2="1510" y2="207" stroke="#F59E0B" stroke-width="1.8" marker-end="url(#a-amber)"/>
+<text x="1524" y="196" class="el" fill="#B45309">softmax</text>
+
+<rect x="1250" y="215" width="520" height="140" rx="5" fill="#F59E0B" fill-opacity="0.10" stroke="#F59E0B" stroke-width="1.4"/>
+<text x="1270" y="242" class="mb">p_raw ∈ ℝ⁶</text>
+<text x="1270" y="264" class="ms" fill="#B45309">CNN neuron order = ImageFolder alphabetical (uppercase first)</text>
+<text x="1270" y="290" class="m">0 PSORIASIS          3 chronic dermatitis</text>
+<text x="1270" y="312" class="m">1 Rosea              4 lichen planus</text>
+<text x="1270" y="334" class="m">2 Rubra              5 seborrheic dermatitis</text>
+
+<line x1="1510" y1="355" x2="1510" y2="392" stroke="#F59E0B" stroke-width="1.8" marker-end="url(#a-amber)"/>
+<text x="1524" y="379" class="el" fill="#B45309">labels.image_probs_to_canonical()</text>
+
+<rect x="1250" y="400" width="520" height="90" rx="5" fill="#F59E0B" fill-opacity="0.20" stroke="#F59E0B" stroke-width="2.4"/>
+<text x="1270" y="429" class="mb">p_image ∈ ℝ⁶ — CANONICAL [1..6]</text>
+<text x="1270" y="453" class="b">the branch's only public output</text>
+<text x="1270" y="475" class="ms" fill="#B45309">→ seeds the NB prior AND enters late fusion (D1)</text>
+
+<!-- reindex callout -->
+<rect x="1250" y="520" width="520" height="150" rx="6" fill="#FEF2F2" stroke="#EF4444" stroke-width="1.2" stroke-dasharray="5 3"/>
+<text x="1268" y="544" class="cot" fill="#B91C1C">THE CNN ORDER IS NOT THE TABULAR ORDER</text>
+<text x="1268" y="568" class="co">The CNN indexes classes alphabetically; the tabular model uses</text>
+<text x="1268" y="585" class="co">class ids 1–6. These are different permutations of the same six</text>
+<text x="1268" y="602" class="co">diseases. Every vector is reindexed exactly once, here.</text>
+<text x="1268" y="626" class="co" font-weight="600">Get it wrong and every downstream number is silently, plausibly</text>
+<text x="1268" y="643" class="co" font-weight="600">wrong — no crash, no warning, just a subtly worse system.</text>
+<text x="1268" y="662" class="ms">confirmed against 3 independent sources (labels.py)</text>
+
+<!-- dataset -->
+<rect x="1250" y="700" width="520" height="145" rx="6" fill="#64748B" fill-opacity="0.10" stroke="#64748B" stroke-width="1.4"/>
+<text x="1268" y="726" class="t2">TRAINING SET (real)</text>
+<text x="1268" y="750" class="m">3,592 photos · 6 classes · imbalance 36 : 1</text>
+<text x="1268" y="776" class="ms">PSORIASIS 1752 · chronic dermatitis 1026 · lichen planus 358</text>
+<text x="1268" y="795" class="ms">seborrheic 349 · Rubra 58 · Rosea 49</text>
+<text x="1268" y="822" class="co" font-weight="600">The imbalance is why macro-F1, not accuracy, is the headline.</text>
+
+<!-- per-class -->
+<rect x="1250" y="875" width="520" height="185" rx="6" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+<text x="1268" y="901" class="t2">PER-CLASS F1 (test)</text>
+<text x="1268" y="928" class="m">Rosea                 0.833  ██████████</text>
+<text x="1268" y="950" class="m">seborrheic dermatitis 0.829  ██████████</text>
+<text x="1268" y="972" class="m">chronic dermatitis    0.785  █████████</text>
+<text x="1268" y="994" class="m">Psoriasis             0.739  ████████</text>
+<text x="1268" y="1016" class="m">Rubra                 0.600  ███████</text>
+<text x="1268" y="1038" class="m" fill="#B91C1C">lichen planus         0.512  █████  ← weak class</text>
+
+<!-- ══════════ CHECKPOINT SIDE RAIL (left) ══════════ -->
+<text x="40" y="418" class="grp">CHECKPOINT LOADER</text>
+
+<path d="M40,442 a105,14 0 0 1 210,0 v56 a105,14 0 0 1 -210,0 z" fill="#64748B" fill-opacity="0.12" stroke="#64748B" stroke-width="1.4"/>
+<path d="M40,442 a105,14 0 0 0 210,0" fill="none" stroke="#64748B" stroke-width="1.4"/>
+<text x="145" y="482" class="m" text-anchor="middle">best_MobileNetV3.pth</text>
+
+<line x1="145" y1="512" x2="145" y2="547" stroke="#64748B" stroke-width="1.6" marker-end="url(#a-slate)"/>
+<text x="158" y="536" class="ms">torch.load(cpu)</text>
+
+<rect x="40" y="555" width="210" height="150" rx="5" fill="#64748B" fill-opacity="0.12" stroke="#64748B" stroke-width="1.4"/>
+<text x="55" y="580" class="t2" font-size="13">_unwrap_state_dict()</text>
+<text x="55" y="602" class="ms">a full TRAINING dict:</text>
+<text x="55" y="620" class="ms">{epoch,</text>
+<text x="55" y="638" class="ms"> model_state_dict,   ←take</text>
+<text x="55" y="656" class="ms"> optimizer_state_dict,</text>
+<text x="55" y="674" class="ms"> best_val_f1: 0.749}</text>
+<text x="55" y="696" class="ms">strip "module." prefix</text>
+
+<line x1="145" y1="705" x2="145" y2="742" stroke="#64748B" stroke-width="1.6" marker-end="url(#a-slate)"/>
+<text x="158" y="730" class="ms">strict=True</text>
+
+<rect x="40" y="750" width="210" height="110" rx="5" fill="#10B981" fill-opacity="0.12" stroke="#10B981" stroke-width="1.4"/>
+<text x="55" y="776" class="t2" font-size="13" fill="#065F46">310 / 310 tensors</text>
+<text x="55" y="798" class="ms">every key matched exactly</text>
+<text x="55" y="820" class="ms">model.eval() · CPU</text>
+<text x="55" y="844" class="ms">@lru_cache(maxsize=1)</text>
+
+<!-- weights into the model -->
+<path d="M250,805 L272,805 L272,700 L332,700" fill="none" stroke="#10B981" stroke-width="1.6" marker-end="url(#a-slate)"/>
+<g transform="translate(264,762) rotate(-90)"><text x="0" y="0" class="ms" fill="#065F46" text-anchor="middle">weights</text></g>
+
+<!-- failure path -->
+<line x1="145" y1="860" x2="145" y2="897" stroke="#EF4444" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#a-red)"/>
+<text x="158" y="884" class="ms" fill="#B91C1C">on failure</text>
+
+<rect x="40" y="905" width="210" height="130" rx="5" fill="#FEF2F2" stroke="#EF4444" stroke-width="1.3" stroke-dasharray="5 3"/>
+<text x="55" y="930" class="cot" fill="#B91C1C">RuntimeError</text>
+<text x="55" y="953" class="co">The app falls back to a</text>
+<text x="55" y="970" class="co">uniform prior and runs</text>
+<text x="55" y="987" class="co">interview-only.</text>
+<text x="55" y="1012" class="co" font-weight="600">It degrades — it never</text>
+<text x="55" y="1029" class="co" font-weight="600">crashes.</text>
+
+<!-- ══════════ ZOOM INSET ══════════ -->
+<line x1="850" y1="330" x2="850" y2="430" stroke="#F59E0B" stroke-width="1" stroke-dasharray="5 3"/>
+<line x1="1180" y1="330" x2="1180" y2="430" stroke="#F59E0B" stroke-width="1" stroke-dasharray="5 3"/>
+<text x="1015" y="412" class="ms" fill="#B45309" text-anchor="middle">expanded below</text>
+
+<rect x="300" y="430" width="880" height="770" rx="8" fill="#FFFBEB" stroke="#F59E0B" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text x="316" y="454" class="grp" fill="#B45309">ZOOM · INSIDE THE FORWARD PASS</text>
+
+<rect x="340" y="468" width="300" height="48" rx="14" fill="#FFFFFF" stroke="#F59E0B" stroke-width="1.4"/>
+<text x="490" y="498" class="mb" text-anchor="middle">[1, 3, 224, 224]</text>
+
+<line x1="490" y1="516" x2="490" y2="552" stroke="#F59E0B" stroke-width="1.8" marker-end="url(#a-amber)"/>
+
+<!-- backbone -->
+<rect x="340" y="560" width="800" height="270" rx="6" fill="#F59E0B" fill-opacity="0.12" stroke="#F59E0B" stroke-width="1.8"/>
+<text x="360" y="588" class="t">timm mobilenetv3_large_100 — BACKBONE</text>
+<text x="360" y="609" class="ms">pretrained=False at load time · ImageNet-pretrained at train time · num_classes=0, global_pool=""</text>
+<text x="360" y="634" class="m">conv_stem 3×3 s2 → 16 ch</text>
+<text x="360" y="656" class="m">15 × InvertedResidual (MBConv) blocks</text>
+<text x="360" y="676" class="ms">     · depthwise-separable convolutions   · Squeeze-Excite on the later stages   · Hard-Swish</text>
+<text x="360" y="702" class="mb" fill="#B45309">→ feature map [1, 960, 7, 7]</text>
+
+<rect x="360" y="718" width="760" height="96" rx="5" fill="#FEF2F2" stroke="#EF4444" stroke-width="1.4"/>
+<text x="376" y="740" class="cot" fill="#B91C1C">⚠ SURGERY — recovered by probing the checkpoint, not documented anywhere</text>
+<text x="376" y="764" class="m">backbone.conv_head = nn.Identity()      (timm default: 960 → 1280)</text>
+<text x="376" y="786" class="m">backbone.act2      = nn.Identity()</text>
+<text x="376" y="806" class="ms" fill="#B91C1C">⇒ the backbone emits 960 channels, NOT timm's default 1280</text>
+
+<line x1="740" y1="830" x2="740" y2="868" stroke="#F59E0B" stroke-width="1.8" marker-end="url(#a-amber)"/>
+<text x="754" y="855" class="el" fill="#B45309">[1, 960, 7, 7]</text>
+
+<!-- head -->
+<rect x="340" y="876" width="800" height="200" rx="6" fill="#F59E0B" fill-opacity="0.12" stroke="#F59E0B" stroke-width="1.8"/>
+<text x="360" y="904" class="t">CUSTOM HEAD — the only part trained from scratch</text>
+<text x="360" y="932" class="m">nn.Sequential(</text>
+<text x="360" y="956" class="m">    AdaptiveAvgPool2d(1)    → [1, 960, 1, 1]</text>
+<text x="360" y="980" class="m">    Flatten()               → [1, 960]</text>
+<text x="360" y="1004" class="m">    Dropout(p=0.2)          → no-op in eval()</text>
+<text x="360" y="1028" class="m">    Linear(960 → 6)         → [1, 6]</text>
+<text x="360" y="1052" class="m">)</text>
+
+<line x1="740" y1="1076" x2="740" y2="1112" stroke="#F59E0B" stroke-width="1.8" marker-end="url(#a-amber)"/>
+
+<rect x="440" y="1120" width="300" height="48" rx="14" fill="#FFFFFF" stroke="#F59E0B" stroke-width="1.4"/>
+<text x="590" y="1150" class="mb" text-anchor="middle">logits ∈ ℝ⁶   [1, 6]</text>
+<text x="760" y="1143" class="ms" fill="#B45309">≡ the output of the FORWARD PASS</text>
+<text x="760" y="1161" class="ms" fill="#B45309">block above — softmax it, reindex it.</text>
+
+<!-- ══════════ FOOTER ══════════ -->
+<rect x="40" y="1240" width="1730" height="90" rx="6" fill="#FEF2F2" stroke="#EF4444" stroke-width="1.4" stroke-dasharray="6 4"/>
+<text x="58" y="1265" class="cot" fill="#B91C1C">HOW WE KNOW THIS IS THE RIGHT ARCHITECTURE</text>
+<text x="58" y="1289" class="co">The checkpoint stores <tspan font-weight="700">weights, not architecture</tspan>. The model class lived in a training notebook we did not have at first, so the architecture was reconstructed by probing the 310 saved tensors — their names and shapes.</text>
+<text x="58" y="1310" class="co">A wrong reconstruction is not silent here: <tspan font-weight="700">load_state_dict(strict=True)</tspan> refuses any mismatch in key names or shapes. All 310 tensors matching is the proof that this — including the conv_head surgery — is exactly the trained model.</text>
+
+</svg>

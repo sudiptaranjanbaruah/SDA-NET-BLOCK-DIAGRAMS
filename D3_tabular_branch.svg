@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1070" viewBox="0 0 1800 1070" font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif">
+
+<defs>
+  <style>
+    text { white-space: pre; }
+    .t   { font-size: 17px; font-weight: 700; fill: #0F172A; }
+    .t2  { font-size: 15px; font-weight: 700; fill: #0F172A; }
+    .b   { font-size: 12.5px; fill: #1E293B; }
+    .m   { font-size: 12px; font-family: 'JetBrains Mono','SF Mono',Menlo,Consolas,monospace; fill: #334155; }
+    .ms  { font-size: 11px; font-family: 'JetBrains Mono','SF Mono',Menlo,Consolas,monospace; fill: #475569; }
+    .mb  { font-size: 13px; font-family: 'JetBrains Mono','SF Mono',Menlo,Consolas,monospace; font-weight: 700; fill: #0F172A; }
+    .math{ font-size: 14px; font-family: 'JetBrains Mono','SF Mono',Menlo,Consolas,monospace; fill: #0F172A; }
+    .el  { font-size: 12px; font-family: 'JetBrains Mono','SF Mono',Menlo,Consolas,monospace; font-weight: 500; }
+    .co  { font-size: 11.5px; fill: #1E293B; }
+    .cot { font-size: 12px; font-weight: 700; }
+    .grp { font-size: 11px; font-weight: 700; fill: #64748B; letter-spacing: 1px; }
+    .badge { font-size: 11.5px; font-family: 'JetBrains Mono','SF Mono',Menlo,Consolas,monospace; font-weight: 700; }
+  </style>
+  <marker id="a-cyan"   markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#06B6D4"/></marker>
+  <marker id="a-violet" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#8B5CF6"/></marker>
+  <marker id="a-slate"  markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#64748B"/></marker>
+</defs>
+
+<rect width="1800" height="1070" fill="#FFFFFF"/>
+
+<text x="40" y="46" font-size="23" font-weight="700" fill="#0F172A">D3 · The Tabular (UCI) Branch — one dataset, two consumers</text>
+<text x="40" y="70" font-size="13.5" fill="#64748B">The same 366 rows train two different models with two different jobs: a discriminative SVM that decides, and a generative Naive Bayes engine that asks.</text>
+
+<!-- ══════════ DATASET ══════════ -->
+<rect x="40" y="110" width="390" height="590" rx="6" fill="#64748B" fill-opacity="0.10" stroke="#64748B" stroke-width="1.6"/>
+<text x="60" y="140" class="t">UCI DERMATOLOGY</text>
+<text x="60" y="162" class="m">dermatology.csv · 366 × 34</text>
+
+<text x="60" y="196" class="grp">FEATURE GROUPS</text>
+<text x="60" y="220" class="b">· 11 clinical</text>
+<text x="72" y="238" class="ms">erythema, scaling, itching, koebner…</text>
+
+<rect x="56" y="250" width="358" height="76" rx="4" fill="#FEF2F2" stroke="#EF4444" stroke-width="1.2"/>
+<text x="68" y="272" class="cot" fill="#B91C1C">· 22 histopathological — NEEDS A BIOPSY</text>
+<text x="80" y="291" class="ms">parakeratosis, spongiosis, saw-tooth</text>
+<text x="80" y="309" class="ms">retes, munro microabscess…</text>
+
+<text x="60" y="348" class="b">· 1 age (continuous)</text>
+
+<text x="60" y="382" class="grp">ENCODING</text>
+<text x="60" y="406" class="b">· 32 features graded 0–3</text>
+<text x="72" y="424" class="ms">0 absent · 1 mild · 2 moderate · 3 severe</text>
+<text x="60" y="446" class="b">· family_history — binary 0 / 1</text>
+<text x="60" y="468" class="b">· age — 8 values are "?" → NaN</text>
+
+<text x="60" y="504" class="grp">CLASSES · IMBALANCE 5.6 : 1</text>
+<text x="60" y="530" class="m">1 Psoriasis         112 ████████████</text>
+<text x="60" y="552" class="m">2 Seborrheic Derm.   61 ███████</text>
+<text x="60" y="574" class="m">3 Lichen Planus      72 ████████</text>
+<text x="60" y="596" class="m">4 Pityriasis Rosea   49 █████</text>
+<text x="60" y="618" class="m">5 Chronic Derm.      52 ██████</text>
+<text x="60" y="640" class="m">6 Pityr. Rubra Pil.  20 ██</text>
+<text x="60" y="672" class="ms" fill="#94A3B8">mild imbalance — unlike the photos (36:1)</text>
+
+<!-- ══════════ FAN-OUT ══════════ -->
+<line x1="430" y1="405" x2="448" y2="405" stroke="#64748B" stroke-width="1.8"/>
+<circle cx="460" cy="405" r="11" fill="#64748B" stroke="#334155" stroke-width="1.4"/>
+
+<path d="M460,394 L460,255 L482,255" fill="none" stroke="#06B6D4" stroke-width="1.8" marker-end="url(#a-cyan)"/>
+<g transform="translate(450,330) rotate(-90)"><text x="0" y="0" class="ms" fill="#0E7490" text-anchor="middle">X[366×34], y</text></g>
+
+<path d="M460,416 L460,600 L482,600" fill="none" stroke="#8B5CF6" stroke-width="1.8" marker-end="url(#a-violet)"/>
+<g transform="translate(450,510) rotate(-90)"><text x="0" y="0" class="ms" fill="#6D28D9" text-anchor="middle">X[366×34], y</text></g>
+
+<!-- ══════════ LANE A · SVM ══════════ -->
+<rect x="490" y="110" width="610" height="290" rx="6" fill="#06B6D4" fill-opacity="0.12" stroke="#06B6D4" stroke-width="1.8"/>
+<text x="510" y="140" class="t">(A) DECIDE — the SVM pipeline</text>
+<text x="510" y="161" class="ms" fill="#0E7490">discriminative · the model that signs off on the verdict</text>
+
+<text x="510" y="192" class="m">sklearn.Pipeline([</text>
+<text x="510" y="214" class="m">    SimpleImputer(strategy="median"),</text>
+<text x="510" y="236" class="m">    StandardScaler(),</text>
+<text x="510" y="258" class="m">    SVC(kernel="rbf", probability=True,</text>
+<text x="510" y="280" class="m">        random_state=42),</text>
+<text x="510" y="302" class="m">])</text>
+<text x="510" y="330" class="mb" fill="#0E7490">→ p_tabular ∈ ℝ⁶   (predict_proba)</text>
+<text x="510" y="358" class="badge" fill="#0E7490">5-fold CV: acc 0.973 · macro-F1 0.971</text>
+<text x="510" y="384" class="co" font-weight="600">Needs all 34 features — and cannot tell you what to ask next.</text>
+
+<line x1="1100" y1="255" x2="1142" y2="255" stroke="#06B6D4" stroke-width="1.8" marker-end="url(#a-cyan)"/>
+<text x="1121" y="245" class="ms" fill="#0E7490" text-anchor="middle">p̂</text>
+
+<!-- ══════════ LANE A · CONFORMAL ══════════ -->
+<rect x="1150" y="110" width="610" height="290" rx="6" fill="#06B6D4" fill-opacity="0.12" stroke="#06B6D4" stroke-width="1.8"/>
+<text x="1170" y="140" class="t">CONFORMAL CALIBRATION</text>
+<text x="1170" y="161" class="ms" fill="#0E7490">distribution-free coverage guarantee · the trust layer</text>
+
+<text x="1170" y="190" class="b">· split 70 / 30, stratified (seed 42)</text>
+<text x="1170" y="212" class="b">· fit a second SVM on the 70%</text>
+<text x="1170" y="234" class="b">· nonconformity on the held-out 30%:</text>
+<text x="1190" y="258" class="math">s_i = 1 − p̂(y_i | x_i)</text>
+<text x="1170" y="284" class="b">· take the quantile:</text>
+<text x="1190" y="308" class="math">q̂ = quantile(s, ⌈(n+1)(1−α)⌉ / n)</text>
+<text x="1170" y="336" class="mb" fill="#0E7490">SET(x) = { c : 1 − p̂(c|x) ≤ q̂ }</text>
+<text x="1170" y="366" class="co" font-weight="600">Set size IS the uncertainty signal:</text>
+<text x="1170" y="384" class="co">singleton = confident · triple = escalate to a dermatologist.</text>
+
+<!-- ══════════ HANDOFF B → A ══════════ -->
+<line x1="800" y1="450" x2="800" y2="408" stroke="#64748B" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#a-slate)"/>
+<text x="816" y="432" class="el" fill="#475569">the evidence the interview collects is fed to the SVM at inference (D1)</text>
+
+<!-- ══════════ LANE B · NAIVE BAYES ══════════ -->
+<rect x="490" y="450" width="1270" height="350" rx="6" fill="#8B5CF6" fill-opacity="0.12" stroke="#8B5CF6" stroke-width="1.8"/>
+<text x="510" y="482" class="t">(B) ASK — NaiveBayesEngine  ·  the model that runs the interview</text>
+<line x1="1120" y1="500" x2="1120" y2="780" stroke="#C4B5FD" stroke-width="1"/>
+
+<text x="510" y="516" class="grp" fill="#6D28D9">FIT — CLOSED FORM, NO GRADIENT DESCENT</text>
+<text x="510" y="542" class="b">· 32 graded features → categorical over {0,1,2,3},</text>
+<text x="526" y="560" class="ms">Laplace-smoothed (α = 1)</text>
+<text x="510" y="584" class="b">· family_history → categorical {0,1}</text>
+<text x="510" y="608" class="b">· age → per-class Gaussian (NaNs dropped, σ floored)</text>
+<text x="510" y="632" class="b">· class prior taken from the counts at left</text>
+<text x="510" y="662" class="badge" fill="#6D28D9">all-34 CV: acc 0.978 · macro-F1 0.973</text>
+<text x="510" y="694" class="co">Fitting is just counting. The whole engine is a table of</text>
+<text x="510" y="712" class="co">conditional probabilities plus six Gaussians.</text>
+<text x="510" y="748" class="co" font-weight="600">prior ← the image posterior, when a photo was uploaded (D1)</text>
+
+<text x="1150" y="516" class="grp" fill="#6D28D9">POSTERIOR UNDER PARTIAL EVIDENCE</text>
+<text x="1150" y="546" class="math">P(d | e) ∝ P(d) · ∏_{f ∈ answered} P(v_f | d)</text>
+<rect x="1146" y="562" width="600" height="62" rx="4" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="1.2"/>
+<text x="1160" y="584" class="co" font-weight="600">Unanswered features are simply ABSENT from the product.</text>
+<text x="1160" y="602" class="co">No imputation. No default value. Nothing invented.</text>
+<text x="1160" y="618" class="ms" fill="#6D28D9">↑ THIS is why Naive Bayes runs the interview and the SVM does not.</text>
+
+<text x="1150" y="656" class="grp" fill="#6D28D9">QUESTION SELECTION</text>
+<text x="1150" y="686" class="math">EIG(f) = H(d) − E_v[ H(d | f = v) ]</text>
+<text x="1150" y="710" class="math">       = I(d ; f)   ≥ 0</text>
+<text x="1150" y="736" class="ms">age handled by exact Gaussian-CDF binning</text>
+<text x="1150" y="762" class="mb" fill="#6D28D9">rank_questions() → argmax → ASK IT</text>
+
+<!-- ══════════ THESIS BANNER ══════════ -->
+<rect x="40" y="850" width="1720" height="170" rx="8" fill="#F8FAFC" stroke="#334155" stroke-width="1.6"/>
+<text x="64" y="884" class="t" font-size="18">Same rows. Two models. Two jobs.</text>
+<text x="64" y="916" class="b" font-size="13.5"><tspan font-weight="700" fill="#6D28D9">Naive Bayes is GENERATIVE</tspan> — it models P(features | disease), so it can score a posterior from 3 answers out of 34, and it can compute the expected value of a question <tspan font-style="italic">it has not yet asked</tspan>.</text>
+<text x="64" y="942" class="b" font-size="13.5">That is exactly what an adaptive interview needs, and it is something a discriminative model structurally cannot do.</text>
+<text x="64" y="974" class="b" font-size="13.5"><tspan font-weight="700" fill="#0E7490">The SVM is DISCRIMINATIVE</tspan> — it models P(disease | features) directly. It is the more accurate classifier (0.973 vs 0.978 is within noise, but it fuses better and calibrates better),</text>
+<text x="64" y="1000" class="b" font-size="13.5">yet it needs a full 34-vector and has no notion of "which feature would tell me the most". <tspan font-weight="700">So NB runs the interview; the SVM signs off on it.</tspan></text>
+
+</svg>
